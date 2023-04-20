@@ -1,0 +1,15 @@
+\babel@toc {spanish}{}\relax 
+\contentsline {chapter}{\numberline {1}Teoría}{2}{chapter.1}%
+\contentsline {section}{\numberline {1.1}División de intervalos por la mitad}{2}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Método de la sección dorada}{5}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Comparación teórica}{7}{section.1.3}%
+\contentsline {chapter}{\numberline {2}Programación}{9}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Comparación numérica de algunos métodos de acotamiento del optimo}{9}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Ejercicio 1}{9}{subsection.2.1.1}%
+\contentsline {subsubsection}{Búsqueda Exhaustiva}{10}{subsubsection*.2}%
+\contentsline {subsubsection}{División de Intervalos}{11}{subsubsection*.3}%
+\contentsline {subsubsection}{Sección Dorada}{12}{subsubsection*.4}%
+\contentsline {subsection}{\numberline {2.1.2}Ejercicio 2}{13}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}Ejercicio 3}{14}{subsection.2.1.3}%
+\contentsline {subsection}{\numberline {2.1.4}Conclusiones}{15}{subsection.2.1.4}%
+\contentsline {chapter}{\numberline {3}Bibliografía}{16}{chapter.3}%

@@ -1,0 +1,374 @@
+%-------------------------------------------------------------------------------------------------%
+\documentclass[12pt]{article}
+%-------------------------------------------------------------------------------------------------%
+\usepackage[spanish]{babel}
+\usepackage[margin=1in]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{amssymb,amsmath,amsthm,amsfonts}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{datetime}
+\usepackage{parskip}
+\usepackage{apacite}
+\usepackage{lipsum}
+\usepackage{color}
+\usepackage{float}
+\usepackage{cancel}
+%-------------------------------------------------------------------------------------------------%
+\newenvironment{solution}{\begin{proof}[Solución]}{\end{proof}}
+\renewcommand{\qedsymbol}{\rule{0.7em}{0.7em}}
+\newtheorem{proposition}{Proposición}
+\newtheorem{observation}{Observación}
+\newtheorem{afirmation}{Afirmación}
+\newtheorem{definition}{Definición}
+\newtheorem{corollary}{Corolario}
+\newtheorem{exercise}{Ejercicio}
+\newtheorem{theorem}{Teorema}
+\newtheorem{example}{Ejemplo}
+\newtheorem{lemma}{Lema}
+\graphicspath{{Img/}}
+\decimalpoint
+%-------------------------------------------------------------------------------------------------%
+\title{Tarea 7 - Optimización No Lineal}
+\author{Camara Medina Cynthia Lilian \\
+Reyes Zamora Ollin \\
+Alanis González Edzon Omar \\[0.2cm]
+Mendoza Urrusquieta Jair Natael}
+\date{\today}
+%-------------------------------------------------------------------------------------------------%
+\makeatletter
+\let\thetitle\@title
+\let\theauthor\@author
+\let\thedate\@date
+\makeatother
+%-------------------------------------------------------------------------------------------------%
+\begin{document}
+%-------------------------------------------------------------------------------------------------%
+\begin{titlepage}
+\centering
+\includegraphics[width=0.9\linewidth]{../logo.png}\\[2.0 cm]
+\textsc{\LARGE Escuela Superior de Física y Matemáticas}\\[1.2 cm]
+\textsc{\Large Instituto Politécnico Nacional}\\[2.5 cm]
+\rule{\linewidth}{0.2 mm} \\[0.4 cm]
+{\huge \bfseries \thetitle}\\
+\rule{\linewidth}{0.2 mm} \\[2.5 cm]
+\textsc{\large \theauthor}
+\vfill
+{\large \thedate}
+\end{titlepage}
+%-------------------------------------------------------------------------------------------------%
+
+\section*{Preguntas}
+
+\begin{enumerate}
+    \item \textbf{¿Por qué es válido analizar la convergencia de los métodos vistos en clase
+    solo para funciones cuadráticas?}
+
+    Debido a que el método de Newton es exacto cuando el orden de las funciones de 2, entonces la primera aproximación es exacta, y el método produce el vector mínimo verdadero en un paso. Debido a que la función de aproximación tiene forma cuadrática.
+    \item \textbf{ Enumere las posibles desventajas del método de Newton para resolver problemas de optimización con varias variables.}
+    
+    \begin{enumerate}[I.]
+        \item La convergencia del método de Newton suele ser en razón a la cercanía de punto inicial al óptimo de la función.
+        \item El costo computacional que requiere es bastante alto debido a que necesita información de la primera y segunda derivada, por lo que en funciones de alta complejidad este tiende a ser lento o divergente.
+        \item Si la Hessiana de la función no es definida positiva no hay garantía de que el método de Newton produzca en todos los casos una sucesión de valores decrecientes de la función objetivo.
+        \item La resolución de un sistema de ecuaciones en cada iteración es muy costosa computacionalmente.
+    \end{enumerate}
+    \item \textbf{Explica cuál es la razón de que existan modificaciones al método de Newton para optimización.}
+    
+    Debido a que el método de Newton original necesita información con un gran costo computacional, se requiere reducir este costo de tal manera que este sea mejor en comparación al original. Además de asegurar que el “paso” que se dé sea de descenso debido a que el método no asegura que esto sea verás en cada iteración.
+    \item \textbf{¿Cuál es la importancia del método de Gradientes Conjugados respecto a los métodos estudiados anteriormente?}
+    
+    El método de gradientes conjugados representa el avance que se ha dado en relación con los métodos visto anteriormente, debido a que su costo computacional, si eficiencia, eficacia y robustez, es mejor que algunos, en algunos ámbitos, pero en relación a todas estas características es uno de los mejores vistos hasta ahora. Debido a que los métodos de direcciones conjugadas aprovechan información geométrica de la función para dar pasos idóneos considerando la concavidad de $f$.
+    El algoritmo de gradientes conjugados es en sí mismo un método de direcciones conjugadas, y por lo tanto es capaz de minimizar una función cuadrática (cuya forma está dada en la matriz $Q$, en principio, definida positiva) de n variables en $n$ pasos.
+    \item \textbf{Explique la filosofía que siguen los métodos de tipo Cuasi-Newton.}
+    
+    Al igual que en el caso de Newton para una variable, donde el método de la secante busca aproximar la derivada de manera iterativa, evitando así calcularla numéricamente, los métodos cuasi Newton buscan aproximar la matriz $H$, mediante matrices $H_k$ utilizadas de manera iterativa.
+\end{enumerate}
+
+\section*{Método de gradientes conjugados}
+
+Buscar el óptimo del siguiente problema mediante el método de gradientes conjugados, con todas las variantes para el cálculo de $\beta$ vistas en clase.
+
+Minimizar \[f(x_1,x_2,x_3,x_4) = (x_1+10x_2)^2+5(x_3-x_4)^2+(x_2-2x_3)^4+10(x_1-x_4)^4\]
+
+Hacer cuatro iteraciones paso a paso, es decir, reportando a cada iteración $k$ los valores de $x^{(k)}$, $f(x^{(k)})$, y $\nabla f(x^{(k)})$. Considere solo 4 cifras de precisión. Comience las iteraciones en el punto $x^{(0)} = (10,-10,10,-10)$. Escriba sus resultados y conclusiones.
+
+Fletcher-Reeves
+
+\[g^k = \begin{bmatrix}
+    2(x_1+10x_2) + 40(x_1-x_4)^3 \\
+    20(x_1+10x_2) + 4(x_2-2x_3)^3 \\
+    10(x_3-x_4) - 8(x_2-2x_3)^3 \\
+    -10(x_3-x_4)-40(x_1-x_4)^3
+\end{bmatrix} \quad x^0 = \begin{bmatrix}
+    10 &-10 & 10 & -10
+\end{bmatrix}\]
+
+\boxed{$k=0$}
+
+\begin{align*}
+    x^1 &= \begin{bmatrix}
+        -2.1074 & -5.8433 & 1.8153 & 2.1218
+    \end{bmatrix} \\
+    f(x^1) &= 14920.6991 \\
+    g^1 &= \begin{bmatrix}
+        -3146.84 & -4612.12 & 6799.56 & 3028.83
+    \end{bmatrix}
+\end{align*}
+
+\boxed{$k=1$}
+
+\begin{align*}
+    x^2 &= \begin{bmatrix}
+        0.4598 & -1.9202 & -3.9834 & -0.3457
+    \end{bmatrix} \\
+    f(x^2) &= 1758.38 \\
+    g^2 &= \begin{bmatrix}
+        -16.5791 & 509.444 & -1804.95 & 15.4717
+    \end{bmatrix}
+\end{align*}
+
+\boxed{$k=2$}
+
+\begin{align*}
+    x^3 &= \begin{bmatrix}
+        -0.0932 & -2.6715 & -2.90 & 0.1207
+    \end{bmatrix} \\
+    f(x^3) &= 860.119 \\
+    g^3 &= \begin{bmatrix}
+        -54.0079 & -413.683 & -275.169 & 30.5985
+    \end{bmatrix}
+\end{align*}
+
+\boxed{$k=3$}
+
+\begin{align*}
+    x^4 &= \begin{bmatrix}
+        0.3154 & 0.00616 & -1.2623 & -0.1282
+    \end{bmatrix} \\
+    f(x^4) &= 52.4207\\
+    g^4 &= \begin{bmatrix}
+        5.3544 & 87.8185 & -149.72 & 7.8493
+    \end{bmatrix}
+\end{align*}
+
+Pollak-Ribiere
+
+\[x^0 = \begin{bmatrix}
+    10 &-10 & 10 & -10
+\end{bmatrix} \quad f(x^0) = 21420.100\]
+\[\nabla f(x^0) = \begin{bmatrix}
+    319820 & -109800 & 216200 & -320200
+\end{bmatrix}^T\]
+
+\boxed{$k=0$}
+
+\begin{align*}
+    x^1 &= \begin{bmatrix}
+        -2.1074 & -5.8433 & 1.8153 & 2.1218
+    \end{bmatrix} \\
+    f(x^1) &= 14920\\
+    g^1 &= \begin{bmatrix}
+        -3146.84 & -4612.12 & 6799.56 & 5028.83
+    \end{bmatrix}
+\end{align*}
+
+\boxed{$k=1$}
+
+\begin{align*}
+    x^2 &= \begin{bmatrix}
+        -0.2820 & -3.0544 & -2.3068 & 0.3673
+    \end{bmatrix} \\
+    f(x^2) &= 993.695\\
+    g^2 &= \begin{bmatrix}
+        -72.6167 & -601.358 & -57.0686 & 37.7087
+    \end{bmatrix}
+\end{align*}
+
+\boxed{$k=2$}
+
+\begin{align*}
+    x^3 &= \begin{bmatrix}
+        -0.2881 & -2.7646 & -2.1579 & 0.3928
+    \end{bmatrix} \\
+    f(x^3) &= 820.784\\
+    g^3 &= \begin{bmatrix}
+        -68.449 & -543.752 & -55.3672 & 38.1343
+    \end{bmatrix}
+\end{align*}
+
+\boxed{$k=3$}
+
+\begin{align*}
+    x^3 &= \begin{bmatrix}
+        -0.0038 & -0.7012 & -2.0162 & 0.2218
+    \end{bmatrix} \\
+    f(x^3) &= 197.432\\
+    g^3 &= \begin{bmatrix}
+        -14.4909 & 7.5478 & -318.108 & 22.8393
+    \end{bmatrix}
+\end{align*}
+
+Hestenes-Stiefel
+
+\[x^0 = \begin{bmatrix}
+    10 &-10 & 10 & -10
+\end{bmatrix} \quad f(x^0) = 21420.100\]
+\[\nabla f(x^0) = \begin{bmatrix}
+    319820 & -109800 & 216200 & -320200
+\end{bmatrix}^T\]
+
+\boxed{$k=0$}
+
+\begin{align*}
+    x^1 &= \begin{bmatrix}
+        -2.1074 & -5.8433 & 1.8153 & 2.1218
+    \end{bmatrix} \\
+    f(x^1) &= 14920\\
+    g^1 &= \begin{bmatrix}
+        -3146.84 & -4612.12 & 6799.56 & 5028.83
+    \end{bmatrix}
+\end{align*}
+
+\boxed{$k=1$}
+
+\begin{align*}
+    x^2 &= \begin{bmatrix}
+        -0.2768 & -3.0562 & -2.3033 & 0.3621
+    \end{bmatrix} \\
+    f(x^2) &= 756.629\\
+    g^2 &= \begin{bmatrix}
+        -57.0514 & -687.525 & 446.574 & 6.5163
+    \end{bmatrix}
+\end{align*}
+
+\boxed{$k=2$}
+
+\begin{align*}
+    x^3 &= \begin{bmatrix}
+        -0.8567 & -1.7767 & -2.1440 & 1.0935
+    \end{bmatrix} \\
+    f(x^3) &= 1073.34\\
+    g^3 &= \begin{bmatrix}
+        -341.282 & -824.616 & 758.456 & 295.554
+    \end{bmatrix}
+\end{align*}
+
+\boxed{$k=3$}
+
+\begin{align*}
+    x^4 &= \begin{bmatrix}
+        -0.9012 & 1.5996 & -2.1650 & 1.1564
+    \end{bmatrix} \\
+    f(x^4) &= 575.496\\
+    g^4 &= \begin{bmatrix}
+        -382.256 & -256.523 & -196.057 & 381.666
+    \end{bmatrix}
+\end{align*}
+
+Podemos concluir que el mejor método es el de Fletcher-Reeves por su rapida convergencia.
+En todos se cumple la propiedad de descenso exepto en Hestenes-Stiefel.
+
+
+\section*{Comprobación de Métodos}
+
+No olvide adicionar al número total de llamadas a la función objetivo, las correspondientes al cálculo de las derivadas con Diferencias Finitas, en el método que aplique.
+
+\subsection*{Gradientes Conjugados}
+
+\begin{enumerate}
+\item Programar en \verb|MATLAB| el método de gradientes conjugados, con la variante que usted decida de entre las que vimos en clase, para aproximar el mínimo del siguiente problema:
+
+\[f(x_1,x_2) = \left(x_2-\dfrac{5.1}{4\pi^2}x_1^2 + \frac{5x_1}{\pi}-6\right)^2 + 10\left(1-\dfrac{1}{8\pi}\right) \cos(x_1) + 10\]
+
+\item Reporte el resultado y compárelo con el obtenido al usar los métodos de la tarea anterior. La comparación es en términos del resultado obtenido y el número de evaluaciones de la función objetivo. Utilice el método de Diferencias Finitas para aproximar todas las derivadas. Detenga las iteraciones en todos los casos cuando la norma del gradiente sea menor que $10^{-9}$. Inicie las iteraciones en el punto $x^{(0)} = (-4,1)$.
+
+La siguiente tabla muestra los resultados y la comparación entre ellos.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+                                                                                                     & \textbf{\begin{tabular}[c]{@{}c@{}}Punto\\ Optimo $x^*$\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Llamadas a la\\ función\end{tabular}} & \textbf{Notas}                                                                                                                                                                                                                                              \\ \hline
+        \textbf{\begin{tabular}[c]{@{}c@{}}Gradientes\\ Conjugados -\\ Fletcher Reeves\end{tabular}} & \begin{tabular}[c]{@{}c@{}}{[}0.00107,\\ 6.00021{]}\end{tabular}      & 1215                                                                     &                                                                                                                                                                                                                                                             \\ \hline
+        \textbf{\begin{tabular}[c]{@{}c@{}}Newton -\\ Raphson\end{tabular}}                          & \begin{tabular}[c]{@{}c@{}}{[}-3.14070,\\ 7.27430{]}\end{tabular}     & 120                                                                      & \begin{tabular}[c]{@{}c@{}}Nuestra hipótesis es que \\ se llega a un punto distinto \\ debido a la distancia entre el punto \\ inicial y el óptimo, pues esta es \\ de 6.40, la que consideramos \\ muy grande para aplicar el método.\end{tabular}         \\ \hline
+        \textbf{\begin{tabular}[c]{@{}c@{}}Pendiente\\ Máxima\end{tabular}}                          & \begin{tabular}[c]{@{}c@{}}{[}0.00049,\\ 5.99997{]}\end{tabular}      & 259                                                                      & \begin{tabular}[c]{@{}c@{}}Se modificó el error máximo \\ permitido a 1E-3 debido a que para \\ un error de orden menor a este los \\ valores resultantes eran  demasiado \\ pequeños, con lo que el algoritmo \\ no funcionaba adecuadamente.\end{tabular} \\ \hline
+        \textbf{\begin{tabular}[c]{@{}c@{}}Cuasi-Newton\\ Rango 1\end{tabular}}                      & \begin{tabular}[c]{@{}c@{}}{[}-3.352E-5,\\ 5.99994{]}\end{tabular}    & 260                                                                      &                                                                                                                                                                                                                                                             \\ \hline
+        \end{tabular}
+        \end{table}
+
+\item Escriba sus conclusiones.
+
+El mejor método para este problema es Cuasi-Newton de Rango 1.
+Concluimos esto debido a que, poniendo como tolerancia un número más pequeño que en el método de Descenso con Pendiente Máxima sólo se realizó una llamada a la función más, además de obtener una mucho mejor aproximación al punto óptimo real.
+
+
+\end{enumerate}
+
+\subsection*{Métodos cuasi-Newton}
+
+\begin{enumerate}
+    \item Programar en \verb |MATLAB| los métodos cuasi-Newton (rango uno, DFP y BFGS), que vimos en clase, para aproximar el mínimo del siguiente problema:
+
+    \[f(x_1,x_2,x_3,x_4) = x_1^2+2x_2^2+3x_3^2+4x_4^2+(x_1+x_2+x_3+x_4)^4\]
+
+    Detenga las iteraciones en todos los casos cuando la norma del gradiente sea menor que $10^{-9}$. Inicie las iteraciones en el punto $x^{(0)} = (10,10,10,10)$. Para los métodos cuasi-Newton reinicie el algoritmo cada 4 iteraciones, de ser necesario.
+
+    El óptimo por \textbf{Rango 1} encontrado es
+
+    \[x^8 = 1\times 10^{-4} \cdot \begin{bmatrix}
+        0.1374 & -0.1111 & -0.0153 & -0.0133
+    \end{bmatrix}\]
+
+    con 8 iteraciones.
+
+    Para \textbf{BFGS}
+
+    \[x^8 = 1\times 10^{-4} \cdot \begin{bmatrix}
+        0.1374 & -0.1111 & -0.0153 & -0.0133
+    \end{bmatrix}\]
+
+    el mismo punto en las mismas iteraciones.
+
+    Y para DFP
+
+    \[x^8 = 1\times 10^{-4} \cdot \begin{bmatrix}
+        0.1374 & -0.1111 & -0.0153 & -0.0133
+    \end{bmatrix}\]
+
+    el mismo punto de nuevo con las mismas iteraciones, en este caso no hubo mayor convergencia al cambiar el rango.
+
+    \item Compare el resultado anterior para aplicar al mismo problema el método de Newton.
+    
+    No es posible aplicar newton ya que nos encontramos con una matriz singular, y esto causa un problema al calcular la inversa ya que no existe, y el codigo no puede ser completado.
+    \item Compare de nuevo el el desempeño de sus programas para cuasi-Newton y Newton con la siguiente función, con $n=10$, y algún punto de inicio.
+    \[f(x) = \sum_{i=1}^{n-1} \left[100(x_{i+1}-x_i^2)^2+(x_i-1)^2\right]\]
+
+    Tomando el punto de inicio 
+
+    \[x^0 = \begin{bmatrix}
+        1 & 0 &  1&  0 &1 &0& 1& 0& 1
+    \end{bmatrix}\]
+
+    Los métodos con el mismo error antes requerido, convergieron al mismo punto
+    \[x^0 = \begin{bmatrix}
+        1 & 1 &  1&  1 &1 &1& 1& 1& 1
+    \end{bmatrix}\]
+
+    en
+
+    \begin{itemize}
+        \item Rango 1 $\rightarrow$ 109 iteraciones
+        \item BFGS $\rightarrow$ 103 iteraciones
+        \item DFP $\rightarrow$ 100 iteraciones
+        \item Newton $\rightarrow$ converge a un punto distinto al que nunca llega, esto por la distancia del punto inicial.
+    \end{itemize}
+    \item Escriba sus conclusiones, en particular respecto a la elección del punto de inicio.
+    
+    El punto de inicio significa mucho para el punto a converger, en el caso de los métodos de Cuasi-Newton no hubo ningun problema al llegar todos al mismo punto, y sus variaciones solo cambiaron las iteraciones en la que lo lograron, pero en el método de newton si afecta bastante la distancia del punto inicial, lo cual lo llevo a no converger por alternar entre un punto que no era él mínimo.
+\end{enumerate}
+
+
+%-------------------------------------------------------------------------------------------------%
+\end{document}
+%-------------------------------------------------------------------------------------------------%
